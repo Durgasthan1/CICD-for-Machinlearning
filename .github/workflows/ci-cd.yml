@@ -35,3 +35,22 @@ jobs:
       - name: Simulate Deployment
         run: echo "Deploying to production..."
 
+  docker-build-push:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && success()
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.durgasthan }}
+          password: ${{ secrets.Dead#sea12 }}
+
+      - name: Build Docker Image
+        run: docker build -t yourdockerhubusername/my-python-app:latest .
+
+      - name: Push Docker Image
+        run: docker push yourdockerhubusername/my-python-app:latest
